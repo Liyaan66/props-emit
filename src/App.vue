@@ -17,7 +17,21 @@ const removeUser = (index) => {
   users.splice(index, 1)
 }
 
-const users = reactive ([
+
+const storedUsers = JSON.parse(localStorage.getItem('users')) || defaultUsers
+
+const users = reactive(storedUsers)
+
+// Watch and save to localStorage when users change
+watch(
+  () => users,
+  (newUsers) => {
+    localStorage.setItem('users', JSON.stringify(newUsers))
+  },
+  { deep: true }
+)
+
+const defaultUsers = reactive ([
   { id: 1, name: "John Doe", age: 30, position: "Software Engineer" },
   { id: 2, name: "Jane Smith", age: 25, position: "Product Manager" },
   { id: 3, name: "Alice Johnson", age: 28, position: "UX Designer" },
